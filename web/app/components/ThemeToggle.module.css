@@ -1,0 +1,23 @@
+.themeToggle {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.themeToggle:hover {
+  background: var(--glass-bg);
+  transform: translateY(-1px);
+}
+
+.togglePlaceholder {
+  width: 36px;
+  height: 36px;
+}

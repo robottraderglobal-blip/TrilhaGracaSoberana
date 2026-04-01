@@ -1,0 +1,16 @@
+.layoutWrapper {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 4rem; /* Space for fixed navbar */
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .layoutWrapper {
+    flex-direction: column;
+  }
+}

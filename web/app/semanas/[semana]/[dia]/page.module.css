@@ -1,0 +1,182 @@
+.container {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.notReadyBox {
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  border: 1px solid var(--glass-border);
+  padding: 3rem;
+  border-radius: 12px;
+  text-align: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  max-width: 450px;
+  margin-top: 4rem;
+}
+
+.notReadyTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.notReadyLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--accent-gold);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.notReadyLink:hover {
+  opacity: 0.8;
+}
+
+.article {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.header {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+}
+
+.backLink {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: var(--accent-gold);
+}
+
+.weekTag {
+  color: var(--accent-gold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.subtema {
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+}
+
+.verseBox {
+  background: var(--glass-bg);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 2.5rem 2rem;
+  margin: 0 -2rem; /* Bleed out */
+}
+
+.verseText {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.verseRef {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Typography styles for ReactMarkdown */
+.prose {
+  font-family: var(--font-sans);
+}
+
+.h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  margin: 3.5rem 0 1.5rem;
+  color: var(--text-primary);
+}
+
+.h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  margin: 2.5rem 0 1rem;
+  color: var(--active-gold);
+}
+
+.p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.ul {
+  margin: 0 0 1.5rem 2rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.li {
+  margin-bottom: 0.5rem;
+}
+
+.blockquote {
+  border-left: 3px solid var(--accent-gold);
+  padding: 1.5rem 2rem;
+  margin: 2.5rem 0;
+  background: var(--glass-bg);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.footer {
+  margin-top: 5rem;
+  text-align: center;
+}
+
+.stats {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.divider {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--accent-gold);
+  opacity: 0.5;
+}

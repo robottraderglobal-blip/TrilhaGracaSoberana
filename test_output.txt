@@ -1,0 +1,19 @@
+﻿1. Importing modules...
+2. Modules imported.
+
+=== QUERIES GERADAS (v2) ===
+
+Query 1:
+O que R.C. Sproul ensina ou prega sobre EfΘsios 2.8-9? Busco comentßrios, serm⌡es ou reflex⌡es sobre o tema 'A Salvaτπo pela Graτa'. Inclua citaτ⌡es diretas, ilustraτ⌡es e aplicaτ⌡es prßticas se disponφveis.
+
+Query 2:
+Quais serm⌡es, estudos ou textos de R.C. Sproul tratam sobre graτa, fΘ, obras, jactΓncia? Apresente os principais argumentos e aplicaτ⌡es do autor.
+
+=== COMPARA╟├O ===
+
+Query ANTIGA (v1):
+Baseado puramente no material indexado deste notebook, o que vocΩ ensina ou comenta sobre as doutrinas de A Soberania de Deus na Salvaτπo, A Exclusπo das Obras como MΘrito que aparecem na passagem bφblica de EfΘsios 2.8-9 (A Salvaτπo pela Graτa)?
+
+Chars query antiga: 246
+Chars query v2-1:   207
+Chars query v2-2:   147

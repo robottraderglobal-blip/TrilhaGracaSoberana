@@ -1,0 +1,383 @@
+.mobileToggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 60;
+  background: var(--accent-gold);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 50px;
+  padding: 0.8rem 1.2rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mobileToggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4);
+}
+
+.toggleIcon {
+  font-size: 1.1rem;
+}
+
+.toggleLabel {
+  font-size: 0.85rem;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 69;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: sticky;
+  top: 5rem;
+  height: calc(100vh - 5rem);
+  width: 320px;
+  min-width: 320px;
+  overflow-y: auto;
+  padding: 1.5rem;
+  border-right: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-gold-dim) transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--accent-gold-dim);
+  border-radius: 4px;
+}
+
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.sidebarTitle {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.hojeButton {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--bg-color);
+  background: var(--accent-gold);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.hojeButton:hover {
+  opacity: 0.85;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* ── Trimestre ── */
+.trimestreBlock {
+  margin-bottom: 0.25rem;
+}
+
+.trimestreBtn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.2s ease;
+}
+
+.trimestreBtn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.trimestreBtn.active {
+  color: var(--accent-gold);
+}
+
+.trimestreLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chevron {
+  font-size: 0.7rem;
+  width: 1rem;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.trimestreCount {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+/* ── Semana ── */
+.semanasContainer {
+  padding-left: 0.5rem;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.semanaBlock {
+  margin-bottom: 1px;
+}
+
+.semanaBtn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.5rem 0.6rem 1rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.semanaBtn:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.semanaBtn.semanaActive {
+  background: var(--accent-gold-dim);
+}
+
+.semanaInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.semanaNum {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  min-width: 2rem;
+}
+
+.semanaTema {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.semanaProgress {
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.progressDots {
+  display: flex;
+  gap: 3px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dotActive {
+  background: var(--accent-gold);
+}
+
+/* ── Dias ── */
+.diasContainer {
+  padding: 0.25rem 0 0.5rem 1.5rem;
+  animation: slideDown 0.15s ease;
+}
+
+.diaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.diaItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.diaNum {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  min-width: 2.5rem;
+}
+
+.diaNome {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.diaCurrent {
+  background: var(--accent-gold-dim);
+  border-left: 2px solid var(--accent-gold);
+}
+
+.diaCurrent .diaNum {
+  color: var(--accent-gold);
+}
+
+.currentDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  margin-left: auto;
+}
+
+.diaDisabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.diaDisabled:hover {
+  background: none;
+}
+
+.diaStatus {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-left: auto;
+}
+
+/* ── Progresso Global ── */
+.globalProgress {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.progressLabel {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), #e8c547);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.progressText {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* ── Mobile ── */
+@media (max-width: 900px) {
+  .mobileToggle {
+    display: flex;
+  }
+
+  .overlay {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 70;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 300px;
+    min-width: unset;
+    padding-top: 2rem;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}

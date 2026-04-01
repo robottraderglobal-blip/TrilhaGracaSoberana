@@ -1,0 +1,122 @@
+.calendarWrapper {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.calendarTitle {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.calendarSubtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.monthsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.monthCard {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+}
+
+.monthHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.monthName {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.monthStats {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(28px, 1fr));
+  gap: 6px;
+}
+
+.dayLetter {
+  font-family: var(--font-sans);
+  font-size: 0.65em;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+.dayBox {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.dayAprovado {
+  background-color: var(--accent-gold);
+  cursor: pointer;
+}
+
+.dayAprovado:hover {
+  transform: scale(1.15);
+  opacity: 0.85;
+  box-shadow: 0 0 10px var(--accent-gold-dim);
+}
+
+.dayPendente {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dayBoxEmpty {
+  aspect-ratio: 1;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (max-width: 600px) {
+  .calendarWrapper {
+    padding: 1rem;
+  }
+}
