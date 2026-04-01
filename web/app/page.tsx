@@ -19,7 +19,7 @@ export default function Home() {
           </p>
           
           <div className={styles.buttonGroup}>
-            <Link href="/hoje" className={styles.primaryButton}>
+            <Link href="/hoje" prefetch={false} className={styles.primaryButton}>
               Ler a Reflexão de Hoje
             </Link>
             <Link href="/semanas" className={`${styles.secondaryButton} glass`}>

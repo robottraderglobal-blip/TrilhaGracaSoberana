@@ -92,7 +92,7 @@ export default function Sidebar({ dias }: { dias: DiaInfo[] }) {
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.open : ''}`}>
         <div className={styles.sidebarHeader}>
           <h2 className={styles.sidebarTitle}>Índice</h2>
-          <Link href="/hoje" className={styles.hojeButton}>
+          <Link href="/hoje" prefetch={false} className={styles.hojeButton}>
             📖 Hoje
           </Link>
         </div>
