@@ -6,7 +6,7 @@ import DayNav from '@/app/components/DayNav';
 import RatingStars from '@/app/components/RatingStars';
 import styles from './page.module.css';
 
-export const revalidate = 3600; // ISR cache por 1 hora
+export const revalidate = 60; // ISR cache por 1 minuto para atualizar rápido após o script Python rodar
 
 interface PageProps {
   params: Promise<{
