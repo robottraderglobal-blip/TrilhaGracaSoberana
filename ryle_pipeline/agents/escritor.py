@@ -31,9 +31,12 @@ class AgenteEscritor(BaseAgent):
         Returns:
             EscritorTrabalho com o rascunho do devocional
         """
+        texto_completo = plano.get("versiculo_completo")
+        texto_display = f"\n\"{texto_completo}\"" if texto_completo else ""
+
         # Montar o prompt com todos os materiais
         prompt_parts = [
-            f"## Texto Bíblico\n{plano['texto_biblico']}",
+            f"## Texto Bíblico\n{plano['texto_biblico']}{texto_display}",
             f"\n## Tema Central\n{plano['tema_central']}",
             f"\n## Tema da Semana\n{plano.get('tema_semana', '')}",
             f"\n## Título Sugerido pelo Exegeta\n{exegese.titulo_sugerido}",
@@ -113,9 +116,9 @@ class AgenteEscritor(BaseAgent):
                 if texto_limpo.endswith(" (ARA)"):
                     texto_limpo = texto_limpo[:-6].strip()
             
-            cabecalho = f"*{texto_limpo}* — {referencia} (ARA)\n\n"
+            cabecalho = f"> *\"{texto_limpo}\"*\n>\n> — **{referencia} (ARA)**\n\n"
         else:
-            cabecalho = f"*{referencia}* (ARA)\n\n"
+            cabecalho = f"> — **{referencia} (ARA)**\n\n"
             
         texto_final = f"{cabecalho}{conteudo.strip()}"
 

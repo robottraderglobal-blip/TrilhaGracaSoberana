@@ -75,8 +75,7 @@ export default async function DevocionalPage({ params }: PageProps) {
       (v.semana === semana + 1 && v.dia_semana === 1 && dia === 7)
   );
 
-  // Extrair verso para o sneak-peak
-  const versoSnippet = plano.texto_biblico.split(',')[0];
+  // Extrair nome dos dias
   const NOME_DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   const nomeDiaCorreto = NOME_DIAS[plano.dia_semana - 1] || plano.dia_nome;
 
@@ -96,10 +95,6 @@ export default async function DevocionalPage({ params }: PageProps) {
           <h1 className={styles.title}>{devocional.titulo}</h1>
           <p className={styles.subtema}>{devocional.subtema}</p>
 
-          <div className={styles.verseBox}>
-            <p className={styles.verseText}>"{versoSnippet}"</p>
-            <p className={styles.verseRef}>— {plano.texto_biblico}</p>
-          </div>
         </header>
 
         <main className={styles.prose}>
