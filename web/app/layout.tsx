@@ -45,7 +45,10 @@ export default function RootLayout({
                 📖 Hoje
               </Link>
               <Link href="/semanas" className="navLink">
-                Semanas
+                Devocionais
+              </Link>
+              <Link href="/culto-domestico" className="navLink">
+                Culto Doméstico
               </Link>
               <Link href="/" className="navLink">
                 Sobre

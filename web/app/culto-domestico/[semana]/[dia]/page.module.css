@@ -1,0 +1,172 @@
+.main {
+  min-height: 100vh;
+  padding: 5rem 2rem 4rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.article {
+  /* Reading optimized */
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 2rem;
+}
+
+.backLink {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.backLink:hover {
+  color: var(--accent-gold);
+}
+
+.dayBadge {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 20px;
+}
+
+/* ── Verse Block ── */
+.verseBlock {
+  margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  border-left: 3px solid var(--accent-gold);
+  background: var(--accent-gold-dim);
+  border-radius: 0 8px 8px 0;
+}
+
+.verseText {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.verseRef {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-style: normal;
+}
+
+/* ── Content ── */
+.content {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--text-primary);
+}
+
+.content p {
+  margin-bottom: 1.2rem;
+}
+
+.content strong {
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.content em {
+  font-style: italic;
+}
+
+.content blockquote {
+  padding: 0.5rem 1rem;
+  border-left: 2px solid rgba(212, 175, 55, 0.4);
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+.content h2, .content h3, .content h4 {
+  font-family: var(--font-serif);
+  margin: 1.5rem 0 0.8rem;
+}
+
+/* ── Reflection Question ── */
+.questionBox {
+  margin: 2.5rem 0;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.questionTitle {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.questionText {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ── Footer ── */
+.footer {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+  margin-top: 2rem;
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Navigation ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.navPrev, .navNext {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  transition: opacity 0.2s;
+}
+
+.navPrev:hover, .navNext:hover {
+  opacity: 0.8;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .main {
+    padding: 4.5rem 1.2rem 3rem;
+  }
+
+  .verseBlock {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .content {
+    font-size: 1rem;
+  }
+}

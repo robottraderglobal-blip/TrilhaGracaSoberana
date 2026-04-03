@@ -167,3 +167,23 @@ a {
     font-size: 0.8rem;
   }
 }
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.elegant-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+.elegant-scrollbar::-webkit-scrollbar-track {
+  background: var(--glass-bg);
+  border-radius: 10px;
+}
+.elegant-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 10px;
+}
+.elegant-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #E8CA58;
+}
+.navLink {
+  font-family: var(--font-sans);
+}
