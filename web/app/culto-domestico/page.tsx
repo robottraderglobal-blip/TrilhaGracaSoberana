@@ -52,7 +52,7 @@ export default async function CultoDomesticoPage() {
         Culto Doméstico
       </h1>
       <p className={styles.subtitle} style={{ textAlign: 'center', marginBottom: '1.5rem', maxWidth: '600px', margin: '0 auto 1.5rem', lineHeight: '1.6' }}>
-        Uma jornada de 100 versículos essenciais selecionados para meditação em família. Estude e memorize a Palavra no seu{' '}
+        Uma jornada de versículos essenciais selecionados para meditação em família. Estude e memorize a Palavra no seu{' '}
         <span style={{ color: 'var(--accent-gold)' }}>Culto Doméstico</span>.
       </p>
 

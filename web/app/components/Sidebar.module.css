@@ -223,16 +223,22 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 
 .semanaProgress {
   margin-left: 0.5rem;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+  max-width: 80px;
 }
 
 .progressDots {
   display: flex;
   gap: 3px;
+  flex-wrap: wrap;
+  max-height: 14px;
+  overflow: hidden;
 }
 
 .dot {

@@ -146,14 +146,20 @@ export default function NicoSidebar({ dias }: { dias: NicoDia[] }) {
                     <span className={styles.semanaTema}>{livro}</span>
                   </span>
                   <span className={styles.semanaProgress}>
-                    <span className={styles.progressDots}>
-                      {diasLivro.map((d, i) => (
-                        <span
-                          key={i}
-                          className={`${styles.dot} ${d.status === 'aprovado' ? styles.dotActive : ''}`}
-                        />
-                      ))}
-                    </span>
+                    {diasLivro.length > 10 ? (
+                      <span style={{ fontSize: '0.7rem', color: 'var(--accent-gold)', opacity: 0.7 }}>
+                        {aprovadosLivro}/{diasLivro.length}
+                      </span>
+                    ) : (
+                      <span className={styles.progressDots}>
+                        {diasLivro.map((d, i) => (
+                          <span
+                            key={i}
+                            className={`${styles.dot} ${d.status === 'aprovado' ? styles.dotActive : ''}`}
+                          />
+                        ))}
+                      </span>
+                    )}
                   </span>
                 </button>
 
