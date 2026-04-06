@@ -53,39 +53,6 @@ export default function DevocionaisCarousel({ data }: { data: any[] }) {
   return (
     <div style={{ position: 'relative', width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
       
-      {/* Botões de navegação lateral (Apenas visíveis se hover na área desktop) */}
-      <button 
-        onClick={() => scrollByAmount(-320)}
-        style={{
-          position: 'absolute', left: '-20px', top: '50%', transform: 'translateY(-50%)',
-          zIndex: 10, background: 'var(--glass-bg)', backdropFilter: 'blur(8px)',
-          border: '1px solid var(--accent-gold)', color: 'var(--accent-gold)',
-          width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: 'background 0.2s',
-          fontSize: '1.2rem'
-        }}
-        aria-label="Rolar para esquerda"
-      >
-        &#8592;
-      </button>
-
-      <button 
-        onClick={() => scrollByAmount(320)}
-        style={{
-          position: 'absolute', right: '-20px', top: '50%', transform: 'translateY(-50%)',
-          zIndex: 10, background: 'var(--glass-bg)', backdropFilter: 'blur(8px)',
-          border: '1px solid var(--accent-gold)', color: 'var(--accent-gold)',
-          width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: 'background 0.2s',
-          fontSize: '1.2rem'
-        }}
-        aria-label="Rolar para direita"
-      >
-        &#8594;
-      </button>
-
       {/* Container de Rolagem */}
       <div 
         ref={scrollRef}
@@ -98,12 +65,12 @@ export default function DevocionaisCarousel({ data }: { data: any[] }) {
           gap: '1.2rem',
           overflowX: 'auto',
           padding: '1rem',
-          paddingBottom: '2rem',
+          paddingBottom: '1rem', // Reduzido já que os botões ficam embaixo
           cursor: isDragging ? 'grabbing' : 'grab',
-          scrollbarWidth: 'none', // Remove completely for elegance
+          scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
-          scrollSnapType: isDragging ? 'none' : 'x mandatory', // Desliga snap durante arraste manual
+          scrollSnapType: isDragging ? 'none' : 'x mandatory',
         }}
         className="hide-scrollbar"
       >
@@ -154,6 +121,49 @@ export default function DevocionaisCarousel({ data }: { data: any[] }) {
             </p>
           </Link>
         ))}
+      </div>
+
+      {/* Controles do Carrossel (Elegantes e fora dos cards) */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        gap: '1.5rem', 
+        marginTop: '1rem',
+        paddingBottom: '1rem'
+      }}>
+        <button 
+          onClick={() => scrollByAmount(-320)}
+          style={{
+            background: 'var(--glass-bg)', backdropFilter: 'blur(8px)',
+            border: '1px solid var(--glass-border)', color: 'var(--accent-gold)',
+            width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: 'all 0.2s',
+            fontSize: '1.2rem'
+          }}
+          aria-label="Rolar para esquerda"
+          onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--accent-gold)'}
+          onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--glass-border)'}
+        >
+          &#8592;
+        </button>
+        <button 
+          onClick={() => scrollByAmount(320)}
+          style={{
+            background: 'var(--glass-bg)', backdropFilter: 'blur(8px)',
+            border: '1px solid var(--glass-border)', color: 'var(--accent-gold)',
+            width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: 'all 0.2s',
+            fontSize: '1.2rem'
+          }}
+          aria-label="Rolar para direita"
+          onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--accent-gold)'}
+          onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--glass-border)'}
+        >
+          &#8594;
+        </button>
       </div>
     </div>
   );

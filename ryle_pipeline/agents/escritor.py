@@ -75,6 +75,7 @@ class AgenteEscritor(BaseAgent):
         # Pesquisa das fontes (se disponível)
         if pesquisas:
             prompt_parts.append("\n## Insights das Fontes Teológicas")
+            prompt_parts.append("*(Instrução: Utilize essas ideias para encorpar a teologia do devocional. Em vez de fazer citações acadêmicas literais como 'Spurgeon afirma...', teça as ideias naturalmente na voz do narrador, ou use expressões puritanas como 'um experiente homem de Deus bem disse...'.)*")
             for p in pesquisas:
                 if p.resultado:
                     fonte_label = {
@@ -83,10 +84,15 @@ class AgenteEscritor(BaseAgent):
                         "spurgeon": "C.H. Spurgeon",
                         "lloyd_jones": "Martyn Lloyd-Jones",
                     }.get(p.fonte, p.fonte)
-                    prompt_parts.append(
-                        f"\n### {fonte_label} sobre '{p.doutrina_nome}':\n"
-                        f"{p.resultado}"
-                    )
+                    
+                    # Construir bloco de insights
+                    bloco_texto = [f"\n### {fonte_label} sobre '{p.doutrina_nome}':", f"Resumo: {p.resultado}"]
+                    if hasattr(p, "key_insights") and p.key_insights:
+                        bloco_texto.append("Insights principais extraídos:")
+                        for insight in p.key_insights:
+                            bloco_texto.append(f"  - {insight}")
+                    
+                    prompt_parts.append("\n".join(bloco_texto))
 
         prompt_parts.append(
             "\n---\n"
@@ -180,9 +186,9 @@ class AgenteEscritor(BaseAgent):
                 if texto_limpo.endswith(" (ARA)"):
                     texto_limpo = texto_limpo[:-6].strip()
             
-            cabecalho = f"*{texto_limpo}* — {referencia} (ARA)\n\n"
+            cabecalho = f"> *\"{texto_limpo}\"*\n>\n> — **{referencia} (ARA)**\n\n"
         else:
-            cabecalho = f"*{referencia}* (ARA)\n\n"
+            cabecalho = f"> — **{referencia} (ARA)**\n\n"
             
         texto_final = f"{cabecalho}{conteudo.strip()}"
 

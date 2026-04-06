@@ -1,19 +1,10 @@
-
-
 """
-Ryle Pipeline — Agente Pesquisador (v3.1)
+Ryle Pipeline — Agente Pesquisador (v3)
 Consulta o NotebookLM via MCP com sessão única, cache Supabase e paralelismo controlado.
 
-Mudanças v3.1 (vs v3):
+Mudanças v3 (vs v2):
 ─────────────────────────────────────────────────────────────────────
-AUTO-REFRESH
-  • Detecta erro de autenticação ("Authentication expired") na resposta MCP
-  • Tenta refresh_auth via MCP (recarrega tokens do disco)
-  • Se falhar, roda notebooklm-mcp-auth CLI como subprocesso headless
-  • Máximo 2 tentativas de refresh por sessão (evita loops infinitos)
-  • Revalida autenticação no health check com query real de teste
-
-RESILIÊNCIA (v3)
+RESILIÊNCIA
   • Sessão MCP única para todo o batch (não abre/fecha por query)
   • Backoff exponencial com jitter em cada chamada MCP
   • Cache Supabase: hit → pula NLM; miss → consulta e salva
@@ -28,16 +19,17 @@ QUALIDADE
 ─────────────────────────────────────────────────────────────────────
 """
 import asyncio
+import json
 import logging
 import random
-import subprocess
-import sys
+import time
 from typing import Optional
 
 from rich.console import Console
 
 from .base import BaseAgent
 from .. import config
+from ..models.exegese import Exegese
 from ..models.pesquisa import PesquisaFonte
 from .nlm_cache import NLMCache
 
@@ -54,17 +46,6 @@ BACKOFF_MAX = 10.0       # teto do backoff em segundos
 JITTER_MAX = 0.5         # aleatoriedade extra para evitar thundering herd
 MIN_RESPOSTA_UTIL = 80   # chars mínimos para considerar resposta não-vazia
 SEMAFORO_PARALELO = 2    # máximo de notebooks consultados simultaneamente
-MAX_AUTH_REFRESHES = 2   # máximo de tentativas de refresh de auth por sessão
-
-# ── Frases que indicam auth expirado ──────────────────────────────────────────
-AUTH_ERROR_MARKERS = [
-    "Authentication expired",
-    "authentication expired",
-    "auth expired",
-    "Run 'notebooklm-mcp-auth'",
-    "UNAUTHENTICATED",
-    "401",
-]
 
 # ── Mapeamento fonte → nome real ──────────────────────────────────────────────
 NOMES_AUTORES = {
@@ -87,14 +68,13 @@ class AgentePesquisador(BaseAgent):
         super().__init__("pesquisador_system.md")
         # Cache é opcional: se não passar supabase_client, roda sem cache
         self.cache = NLMCache(supabase_client) if supabase_client else None
-        self._auth_refresh_count = 0  # controla quantas vezes já tentou refresh nesta sessão
 
     # ──────────────────────────────────────────────────────────────────────────
     # API pública
     # ──────────────────────────────────────────────────────────────────────────
 
     def pesquisar_todas(
-        self, exegese, texto_biblico: str, tema_central: str
+        self, exegese: Exegese, texto_biblico: str, tema_central: str
     ) -> list[PesquisaFonte]:
         """
         Ponto de entrada síncrono: abre UMA sessão MCP e consulta todos os
@@ -109,7 +89,7 @@ class AgentePesquisador(BaseAgent):
     # ──────────────────────────────────────────────────────────────────────────
 
     async def _pesquisar_todas_async(
-        self, exegese, texto_biblico: str, tema_central: str
+        self, exegese: Exegese, texto_biblico: str, tema_central: str
     ) -> list[PesquisaFonte]:
         """
         Abre UMA sessão stdio_client e reutiliza para todas as consultas.
@@ -172,7 +152,7 @@ class AgentePesquisador(BaseAgent):
         session: ClientSession,
         nome_fonte: str,
         notebook_id: str,
-        exegese,
+        exegese: Exegese,
         texto_biblico: str,
         tema_central: str,
     ) -> PesquisaFonte:
@@ -186,7 +166,7 @@ class AgentePesquisador(BaseAgent):
         session: ClientSession,
         nome_fonte: str,
         notebook_id: str,
-        exegese,
+        exegese: Exegese,
         texto_biblico: str,
         tema_central: str,
     ) -> PesquisaFonte:
@@ -237,18 +217,6 @@ class AgentePesquisador(BaseAgent):
                     textos = [c.text for c in resultado_mcp.content if c.type == "text"]
                     candidato = "\n".join(textos).strip()
 
-                    # ── Detectar erro de autenticação e tentar auto-refresh ──
-                    if self._is_auth_error(candidato):
-                        console.print(f"   [bold yellow]🔑 Auth expirado detectado em {nome_fonte}! Tentando auto-refresh...[/bold yellow]")
-                        refresh_ok = await self._auto_refresh_auth(session)
-                        if refresh_ok:
-                            console.print(f"   [bold green]✅ Auth renovado com sucesso! Retentando query...[/bold green]")
-                            # Retry imediato após refresh bem-sucedido
-                            continue
-                        else:
-                            console.print(f"   [bold red]❌ Auto-refresh falhou. Caindo para fallback.[/bold red]")
-                            break  # sai do loop de tentativas, vai para fallback
-
                     # Tentar capturar conversation_id para multi-turn (se o tool retornar)
                     for bloco in resultado_mcp.content:
                         if hasattr(bloco, "data") and isinstance(bloco.data, dict):
@@ -270,18 +238,6 @@ class AgentePesquisador(BaseAgent):
                         )
 
                 except Exception as e:
-                    err_str = str(e)
-                    # Verificar se a exceção é de auth
-                    if self._is_auth_error(err_str):
-                        console.print(f"   [bold yellow]🔑 Auth expirado (exceção) em {nome_fonte}! Tentando auto-refresh...[/bold yellow]")
-                        refresh_ok = await self._auto_refresh_auth(session)
-                        if refresh_ok:
-                            console.print(f"   [bold green]✅ Auth renovado! Retentando...[/bold green]")
-                            continue
-                        else:
-                            console.print(f"   [bold red]❌ Auto-refresh falhou. Caindo para fallback.[/bold red]")
-                            break
-
                     logger.warning(f"[{nome_fonte}] Erro MCP tentativa {tentativa+1}: {e}")
                     if tentativa < MAX_RETRIES - 1:
                         espera = _calcular_backoff(tentativa)
@@ -322,7 +278,7 @@ class AgentePesquisador(BaseAgent):
         query_usada: str,
         nome_fonte: str,
         notebook_id: str,
-        exegese,
+        exegese: Exegese,
         texto_biblico: str,
         tema_central: str,
         doutrinas: str,
@@ -376,7 +332,7 @@ class AgentePesquisador(BaseAgent):
         nome_fonte: str,
         notebook_id: str,
         query: str,
-        exegese,
+        exegese: Exegese,
         doutrinas: str,
         tentativas: int,
     ) -> PesquisaFonte:
@@ -401,7 +357,7 @@ class AgentePesquisador(BaseAgent):
 
     async def _batch_fallback(
         self,
-        exegese,
+        exegese: Exegese,
         texto_biblico: str,
         tema_central: str,
         fontes: dict,
@@ -440,8 +396,7 @@ class AgentePesquisador(BaseAgent):
     async def _health_check(self, session: ClientSession) -> bool:
         """
         Verifica se a sessão MCP está operacional antes de iniciar o batch.
-        Fase 1: list_tools como ping básico.
-        Fase 2: refresh_auth para tentar renovar tokens preventivamente.
+        Usa list_tools como ping — não consome quota do NotebookLM.
         """
         try:
             tools = await asyncio.wait_for(session.list_tools(), timeout=8.0)
@@ -450,22 +405,6 @@ class AgentePesquisador(BaseAgent):
                 logger.error(f"Health check: 'notebook_query' não encontrado. Tools: {nomes}")
                 return False
             logger.info(f"Health check OK. Tools disponíveis: {nomes}")
-
-            # Renovar tokens preventivamente a cada batch
-            if "refresh_auth" in nomes:
-                try:
-                    refresh_result = await asyncio.wait_for(
-                        session.call_tool("refresh_auth", {}), timeout=15.0
-                    )
-                    textos = [c.text for c in refresh_result.content if c.type == "text"]
-                    refresh_msg = "\n".join(textos)
-                    if "success" in refresh_msg.lower():
-                        logger.info("Health check: refresh_auth preventivo OK")
-                    else:
-                        logger.warning(f"Health check: refresh_auth retornou: {refresh_msg[:200]}")
-                except Exception as e:
-                    logger.warning(f"Health check: refresh_auth preventivo falhou (não-fatal): {e}")
-
             return True
         except asyncio.TimeoutError:
             logger.error("Health check: timeout (>8s)")
@@ -475,135 +414,11 @@ class AgentePesquisador(BaseAgent):
             return False
 
     # ──────────────────────────────────────────────────────────────────────────
-    # Auto-refresh de autenticação
-    # ──────────────────────────────────────────────────────────────────────────
-
-    def _is_auth_error(self, text: str) -> bool:
-        """Detecta se uma resposta ou exceção indica auth expirado."""
-        if not text:
-            return False
-        return any(marker.lower() in text.lower() for marker in AUTH_ERROR_MARKERS)
-
-    async def _auto_refresh_auth(self, session: ClientSession) -> bool:
-        """
-        Tenta renovar a autenticação do NotebookLM automaticamente.
-        
-        Estratégia em 2 fases:
-          1. Chamar refresh_auth via MCP (recarrega tokens do disco)
-          2. Se falhar, rodar notebooklm-mcp-auth CLI (headless, usa perfil Chrome salvo)
-        
-        Máximo de MAX_AUTH_REFRESHES tentativas por sessão para evitar loops.
-        """
-        if self._auth_refresh_count >= MAX_AUTH_REFRESHES:
-            console.print(f"   [red]🚫 Limite de {MAX_AUTH_REFRESHES} tentativas de refresh atingido nesta sessão.[/red]")
-            logger.error(f"Auto-refresh: limite de {MAX_AUTH_REFRESHES} atingido")
-            return False
-
-        self._auth_refresh_count += 1
-        console.print(f"   [cyan]🔄 Auto-refresh tentativa {self._auth_refresh_count}/{MAX_AUTH_REFRESHES}[/cyan]")
-
-        # ── Fase 1: refresh_auth via MCP ──────────────────────────────────────
-        try:
-            console.print("   [dim]  Fase 1: refresh_auth via MCP...[/dim]")
-            result = await asyncio.wait_for(
-                session.call_tool("refresh_auth", {}), timeout=15.0
-            )
-            textos = [c.text for c in result.content if c.type == "text"]
-            msg = "\n".join(textos)
-            
-            if "success" in msg.lower():
-                logger.info("Auto-refresh: Fase 1 (refresh_auth MCP) sucesso")
-                console.print("   [green]  ✅ Fase 1: tokens recarregados do disco[/green]")
-                # Validar se realmente funciona com uma query teste
-                test_ok = await self._test_auth_after_refresh(session)
-                if test_ok:
-                    return True
-                console.print("   [yellow]  ⚠ Tokens recarregados mas ainda expirados. Tentando Fase 2...[/yellow]")
-            else:
-                console.print(f"   [yellow]  ⚠ Fase 1 retornou: {msg[:100]}[/yellow]")
-        except Exception as e:
-            console.print(f"   [yellow]  ⚠ Fase 1 falhou: {e}[/yellow]")
-            logger.warning(f"Auto-refresh Fase 1 falhou: {e}")
-
-        # ── Fase 2: notebooklm-mcp-auth CLI (headless) ────────────────────────
-        try:
-            console.print("   [dim]  Fase 2: notebooklm-mcp-auth CLI (headless)...[/dim]")
-            proc = await asyncio.to_thread(
-                subprocess.run,
-                [sys.executable, "-m", "notebooklm_mcp.auth_cli"],
-                capture_output=True, text=True, timeout=60
-            )
-            
-            if proc.returncode == 0 and "SUCCESS" in proc.stdout:
-                console.print("   [green]  ✅ Fase 2: re-autenticação CLI concluída[/green]")
-                logger.info("Auto-refresh: Fase 2 (CLI) sucesso")
-                
-                # Recarregar os novos tokens via MCP
-                try:
-                    await asyncio.wait_for(
-                        session.call_tool("refresh_auth", {}), timeout=10.0
-                    )
-                except Exception:
-                    pass  # Melhor esforço
-                
-                # Validar
-                test_ok = await self._test_auth_after_refresh(session)
-                if test_ok:
-                    return True
-                console.print("   [red]  ❌ Fase 2: CLI rodou mas auth continua falhando[/red]")
-            else:
-                stderr_short = (proc.stderr or "")[:200]
-                console.print(f"   [red]  ❌ Fase 2: CLI falhou (exit={proc.returncode}): {stderr_short}[/red]")
-                logger.error(f"Auto-refresh Fase 2 CLI falhou: exit={proc.returncode}, stderr={stderr_short}")
-        except subprocess.TimeoutExpired:
-            console.print("   [red]  ❌ Fase 2: CLI timeout (>60s)[/red]")
-            logger.error("Auto-refresh Fase 2 CLI: timeout")
-        except FileNotFoundError:
-            console.print("   [red]  ❌ Fase 2: notebooklm-mcp-auth não encontrado no PATH[/red]")
-            logger.error("Auto-refresh Fase 2: CLI não encontrado")
-        except Exception as e:
-            console.print(f"   [red]  ❌ Fase 2 falhou: {e}[/red]")
-            logger.error(f"Auto-refresh Fase 2 falhou: {e}")
-
-        return False
-
-    async def _test_auth_after_refresh(self, session: ClientSession) -> bool:
-        """Faz uma query rápida de teste para validar se o auth está funcional."""
-        try:
-            # Pegar o primeiro notebook válido para o teste
-            nb_id = next(
-                (v for v in config.FONTES_NOTEBOOKS.values() if v and v.strip()),
-                None
-            )
-            if not nb_id:
-                return True  # Sem notebooks para testar, assume OK
-
-            result = await asyncio.wait_for(
-                session.call_tool("notebook_query", {
-                    "notebook_id": nb_id,
-                    "query": "Teste de conexão"
-                }),
-                timeout=30.0
-            )
-            textos = [c.text for c in result.content if c.type == "text"]
-            resposta = "\n".join(textos)
-            
-            if self._is_auth_error(resposta):
-                logger.warning("Test auth after refresh: ainda com erro de auth")
-                return False
-            
-            logger.info("Test auth after refresh: OK")
-            return True
-        except Exception as e:
-            logger.warning(f"Test auth after refresh falhou: {e}")
-            return False
-
-    # ──────────────────────────────────────────────────────────────────────────
     # Geração de queries
     # ──────────────────────────────────────────────────────────────────────────
 
     def _gerar_queries(
-        self, nome_fonte: str, texto_biblico: str, tema_central: str, exegese
+        self, nome_fonte: str, texto_biblico: str, tema_central: str, exegese: Exegese
     ) -> list[str]:
         """
         Gera queries em ordem de especificidade decrescente.

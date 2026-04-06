@@ -192,7 +192,7 @@ def executar(
                 pass
                 
             with console.status("Pesquisando fontes com NotebookLM..."):
-                pesquisador = AgentePesquisador()
+                pesquisador = AgentePesquisador(supabase_client=get_client())
                 pesquisas = pesquisador.pesquisar_todas(
                     exegese=exegese,
                     texto_biblico=plano["texto_biblico"],
