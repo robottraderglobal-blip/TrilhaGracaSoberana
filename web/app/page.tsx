@@ -22,8 +22,8 @@ export default function Home() {
             <Link href="/hoje" prefetch={false} className={styles.primaryButton}>
               Ler a Reflexão de Hoje
             </Link>
-            <Link href="/semanas" className={`${styles.secondaryButton} glass`}>
-              Explorar Planos
+            <Link href="/culto-domestico" className={`${styles.secondaryButton} glass`}>
+              Culto Doméstico
             </Link>
           </div>
         </div>
@@ -36,21 +36,6 @@ export default function Home() {
             "Santifica-os na verdade; a tua palavra é a verdade."
           </p>
           <p className={styles.verseRef}>— João 17:17</p>
-        </div>
-      </section>
-
-      {/* Culto Doméstico promo */}
-      <section className={styles.sneakPeek}>
-        <div className={styles.verseBox}>
-          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', marginBottom: '0.5rem' }}>
-            📖 100 Dias de Culto Doméstico
-          </h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '1rem' }}>
-            Devocionais no estilo de Augustus Nicodemus — clareza pastoral e aplicação para o lar.
-          </p>
-          <Link href="/culto-domestico" className={styles.secondaryButton} style={{ display: 'inline-block' }}>
-            Explorar o plano →
-          </Link>
         </div>
       </section>
     </main>
