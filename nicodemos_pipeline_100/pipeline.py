@@ -49,6 +49,47 @@ def seed():
 
 
 @app.command()
+def seed_expansao():
+    """🌱 Popular o banco com os 50 versículos da expansão bíblica (dias 101-150)."""
+    from . import config
+    from .db.client import seed_plano
+    from .utils import get_verse_or_fallback
+    import json
+
+    plano_path = config.PLANO_EXPANSAO_JSON
+    if not plano_path.exists():
+        console.print(f"[red]❌ Arquivo não encontrado: {plano_path}[/red]")
+        raise typer.Exit(1)
+
+    plano_raw = json.loads(plano_path.read_text(encoding="utf-8"))
+    entries = []
+
+    for week_data in plano_raw:
+        semana = week_data["week"]
+        for day_data in week_data["days"]:
+            dia = day_data["day"]
+            dia_semana = ((dia - 1) % 7) + 1
+            ref = day_data["ref"]
+            versiculo = get_verse_or_fallback(ref, day_data["t"])
+
+            entries.append({
+                "semana": semana,
+                "dia": dia,
+                "dia_semana": dia_semana,
+                "ref": ref,
+                "versiculo": versiculo,
+                "status": "pending",
+            })
+
+    console.print(f"\n📋 Total de entradas da expansão: [bold]{len(entries)}[/bold]")
+
+    with Progress(SpinnerColumn(), TextColumn("[progress.description]{task.description}")) as progress:
+        progress.add_task("Inserindo expansão no Supabase...", total=None)
+        count = seed_plano(entries)
+
+    console.print(f"✅ [green]{count} entradas[/green] inseridas/atualizadas com sucesso!\n")
+
+@app.command()
 def status():
     """📊 Exibir status geral do pipeline."""
     from .db.client import contar_por_status

@@ -40,6 +40,7 @@ PALAVRAS_MAX = int(os.getenv("NICO_PALAVRAS_MAX", "1000"))
 # ── Paths ─────────────────────────────────────────────────
 PROMPTS_DIR = ROOT_DIR / "prompts"
 PLANO_JSON = PROJECT_DIR / "100_devocionais" / "plano_100dias.json"
+PLANO_EXPANSAO_JSON = PROJECT_DIR / "100_devocionais" / "plano_expansao_50.json"
 
 
 def get_llm_model() -> str:
