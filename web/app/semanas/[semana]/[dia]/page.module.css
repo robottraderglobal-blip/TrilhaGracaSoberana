@@ -153,12 +153,14 @@
 
 .blockquote {
   border-left: 3px solid var(--accent-gold);
-  padding: 1.5rem 2rem;
+  padding: 1.8rem 2rem;
   margin: 2.5rem 0;
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 10px 10px 0;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 1.25rem;
+  line-height: 1.7;
   color: var(--text-primary);
 }
 

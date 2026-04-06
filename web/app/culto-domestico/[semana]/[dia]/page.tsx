@@ -97,11 +97,25 @@ export default async function NicoDevocionalPage({ params }: PageProps) {
           </div>
 
           <h1 className={styles.title}>{devocional.ref}</h1>
-          <p className={styles.subtema}>
-            {devocional.versiculo?.substring(0, 120)}
-            {(devocional.versiculo?.length || 0) > 120 ? '...' : ''}
-          </p>
         </header>
+
+        {/* Versículo em destaque */}
+        {devocional.versiculo && (
+          <blockquote className={styles.blockquote}>
+            <p style={{ margin: 0 }}>
+              "{devocional.versiculo}"
+            </p>
+            <p style={{
+              margin: '1rem 0 0',
+              fontWeight: 700,
+              fontStyle: 'normal',
+              fontSize: '0.9rem',
+              color: 'var(--text-primary)',
+            }}>
+              — {devocional.ref} (ARA)
+            </p>
+          </blockquote>
+        )}
 
         <main className={styles.prose}>
           <ReactMarkdown
