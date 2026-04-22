@@ -65,6 +65,12 @@ export default function SemanasViewSwitcher({ dias, topDevocionais }: Props) {
             </Link>
           </div>
 
+          <div className={styles.minhaDevRow}>
+            <Link href="/minha-devocional" className={styles.minhaDevBtn}>
+              Gerar minha própria devocional
+            </Link>
+          </div>
+
           {topDevocionais && topDevocionais.length > 0 && (
             <section className={styles.recentSection}>
               <h2 className={styles.recentTitle}>Devocionais Mais Bem Avaliadas</h2>

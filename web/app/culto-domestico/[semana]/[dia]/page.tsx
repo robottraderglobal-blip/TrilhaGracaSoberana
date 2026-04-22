@@ -10,13 +10,13 @@ export const revalidate = 60;
 /** Remove o versículo do início do markdown para evitar duplicação */
 function stripLeadingVerse(md: string): string {
   // Remove blockquote com versículo no topo: > *"texto"* (Ref ARA)
-  let cleaned = md.replace(/^\s*>\s*\*?"?[^]*?\([\w\s.]+\d+[.:]\d+[^)]*ARA\)\s*\n*/i, '');
+  let cleaned = md.replace(/^\s*>\s*\*?"?[^]*?\([^)]*\d+[.:]\d+[^)]*ARA\)\s*\n*/i, '');
   if (cleaned !== md) return cleaned.trim();
   // Remove itálico com versículo no topo: *"texto"* (Ref ARA)
-  cleaned = md.replace(/^\s*\*?"?[^]*?\([\w\s.]+\d+[.:]\d+[^)]*ARA\)\s*\n*/i, '');
+  cleaned = md.replace(/^\s*\*?"?[^]*?\([^)]*\d+[.:]\d+[^)]*ARA\)\s*\n*/i, '');
   if (cleaned !== md) return cleaned.trim();
   // Fallback: remove primeiro parágrafo se contém a referência ARA
-  cleaned = md.replace(/^.*?\([\w\s.]+\d+[.:]\d+[^)]*ARA\)\s*\n*/i, '');
+  cleaned = md.replace(/^.*?\([^)]*\d+[.:]\d+[^)]*ARA\)\s*\n*/i, '');
   return cleaned.trim();
 }
 

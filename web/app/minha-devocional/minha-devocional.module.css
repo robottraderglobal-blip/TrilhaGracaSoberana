@@ -1,0 +1,755 @@
+/* ============================================================
+   Minha Devocional — Design System
+   Segue as variáveis de globals.css / dark-mode existente
+   ============================================================ */
+
+/* Layout principal */
+.pageWrapper {
+  min-height: 100vh;
+  padding: 6rem 1.5rem 4rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Header da página */
+.pageHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pageTitle {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--accent-gold, #c9a84c);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.pageSubtitle {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1rem;
+  color: var(--text-muted, #9ca3af);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Step Indicator ─────────────────────────────────────── */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2.5rem;
+}
+
+.stepDot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+}
+
+.stepCircle {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 2px solid var(--border-color, #374151);
+  background: var(--bg-card, #1f2937);
+  color: var(--text-muted, #9ca3af);
+  transition: all 0.3s ease;
+}
+
+.stepCircle.active {
+  border-color: var(--accent-gold, #c9a84c);
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--accent-gold, #c9a84c);
+}
+
+.stepCircle.done {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.stepLabel {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #9ca3af);
+  white-space: nowrap;
+}
+
+.stepLabel.active {
+  color: var(--accent-gold, #c9a84c);
+}
+
+.stepLine {
+  width: 5rem;
+  height: 2px;
+  background: var(--border-color, #374151);
+  margin-bottom: 1.4rem;
+  transition: background 0.3s ease;
+}
+
+.stepLine.done {
+  background: #22c55e;
+}
+
+/* ── Card base (glassmorphism) ──────────────────────────── */
+.card {
+  background: var(--bg-card, rgba(31, 41, 55, 0.8));
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 1rem;
+  padding: 2rem;
+  backdrop-filter: blur(12px);
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.card:focus-within {
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+/* ── Etapa 1 — Input ────────────────────────────────────── */
+.inputLabel {
+  display: block;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-gold, #c9a84c);
+  margin-bottom: 0.75rem;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 0.6rem;
+  padding: 1rem;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1rem;
+  color: var(--text-primary, #f9fafb);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+  line-height: 1.6;
+}
+
+.textarea::placeholder {
+  color: var(--text-muted, #9ca3af);
+  font-style: italic;
+}
+
+.textarea:focus {
+  border-color: rgba(201, 168, 76, 0.5);
+}
+
+/* ── Passagem sugerida ──────────────────────────────────── */
+.passagemCard {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.07) 0%, rgba(31, 41, 55, 0.9) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 1rem;
+  padding: 1.75rem;
+  margin-bottom: 0;
+  animation: slideDown 0.4s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.passagemCardSelected {
+  border-color: var(--accent-gold, #c9a84c);
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.25);
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.13) 0%, rgba(31, 41, 55, 0.9) 100%);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.passagemRef {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-gold, #c9a84c);
+  margin-bottom: 0.75rem;
+}
+
+.passagemTexto {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text-primary, #f9fafb);
+  margin-bottom: 1rem;
+  font-style: italic;
+  border-left: 3px solid rgba(201, 168, 76, 0.4);
+  padding-left: 1rem;
+}
+
+/* Texto completo da passagem na etapa de análise */
+.passagemBlockquote {
+  display: block;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--text-primary, #f9fafb);
+  font-style: italic;
+  border-left: 3px solid var(--accent-gold, #c9a84c);
+  padding: 1.1rem 1.4rem;
+  margin: 0 0 1.5rem 0;
+  background: rgba(201, 168, 76, 0.05);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.passagemBlockquoteRef {
+  display: block;
+  font-family: var(--font-outfit), sans-serif;
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-gold, #c9a84c);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.6rem;
+}
+
+.passagemJustificativa {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-muted, #9ca3af);
+  line-height: 1.6;
+}
+
+.passagemJustificativa strong {
+  color: var(--text-secondary, #d1d5db);
+}
+
+/* ── Botões ─────────────────────────────────────────────── */
+.btnRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: 0.5rem;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #c9a84c 0%, #b8922d 100%);
+  color: #111;
+  box-shadow: 0 4px 14px rgba(201, 168, 76, 0.25);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+}
+
+.btnSecondary {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-secondary, #d1d5db);
+  border: 1px solid var(--border-color, #374151);
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btnSuccess {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.2);
+}
+
+.btnSuccess:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
+}
+
+.btnDanger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btnDanger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* ── Loading spinner ────────────────────────────────────── */
+.loadingWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem;
+  color: var(--text-muted, #9ca3af);
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid rgba(201, 168, 76, 0.2);
+  border-top-color: var(--accent-gold, #c9a84c);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Análise — markdown direto ──────────────────────────── */
+.sectionTitle {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary, #f9fafb);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-color, #374151);
+}
+
+.analiseTexto {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text-secondary, #d1d5db);
+  margin-bottom: 1.5rem;
+}
+
+.analiseTexto h3 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-gold, #c9a84c);
+  margin: 2rem 0 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.analiseTexto h3:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.analiseTexto h4 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary, #f9fafb);
+  margin: 1.2rem 0 0.35rem;
+}
+
+.analiseTexto p {
+  margin-bottom: 0.85rem;
+}
+
+.analiseTexto strong {
+  color: var(--text-primary, #f9fafb);
+  font-weight: 600;
+}
+
+.analiseTexto em {
+  font-style: italic;
+  color: var(--text-secondary, #d1d5db);
+}
+
+.analiseTexto ul,
+.analiseTexto ol {
+  padding-left: 1.4rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.analiseTexto li {
+  margin-bottom: 0.4rem;
+}
+
+.analiseTexto blockquote {
+  border-left: 3px solid rgba(201, 168, 76, 0.4);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--text-muted, #9ca3af);
+  font-style: italic;
+}
+
+.analiseTexto a {
+  color: var(--accent-gold, #c9a84c);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.analiseTexto a:hover {
+  opacity: 0.8;
+}
+
+.analiseTexto hr {
+  border: none;
+  border-top: 1px solid var(--border-color, #374151);
+  margin: 1.5rem 0;
+}
+
+
+.accordionItem {
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.accordionItem.open {
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+.accordionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.1rem;
+  background: rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  border: none;
+  color: var(--text-secondary, #d1d5db);
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.accordionHeader:hover {
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.accordionEmoji {
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+.accordionChevron {
+  font-size: 0.75rem;
+  transition: transform 0.25s ease;
+  color: var(--text-muted, #9ca3af);
+}
+
+.accordionItem.open .accordionChevron {
+  transform: rotate(180deg);
+}
+
+.accordionBody {
+  padding: 1.1rem;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text-secondary, #d1d5db);
+  border-top: 1px solid var(--border-color, #374151);
+  animation: fadeIn 0.2s ease;
+}
+
+.accordionBody h3,
+.accordionBody h4 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1rem;
+  color: var(--text-primary, #f9fafb);
+  margin: 1rem 0 0.4rem;
+}
+
+.accordionBody strong {
+  color: var(--text-primary, #f9fafb);
+}
+
+.accordionBody ul,
+.accordionBody ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.accordionBody li {
+  margin-bottom: 0.3rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Devocional renderizada ─────────────────────────────── */
+.devocionalCard {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.05) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  animation: slideDown 0.5s ease;
+}
+
+.devocionalHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.devocionalTitulo {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary, #f9fafb);
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.devocionalPassagemRef {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.9rem;
+  color: var(--accent-gold, #c9a84c);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.devocionalTexto {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.95;
+  color: var(--text-primary, #f9fafb);
+}
+
+.devocionalTexto h1,
+.devocionalTexto h2,
+.devocionalTexto h3 {
+  font-family: var(--font-playfair), Georgia, serif;
+  color: var(--accent-gold, #c9a84c);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.devocionalTexto p {
+  margin-bottom: 1.1rem;
+}
+
+.devocionalTexto strong {
+  color: var(--text-primary, #f9fafb);
+  font-weight: 700;
+}
+
+.devocionalTexto em {
+  font-style: italic;
+  color: var(--text-secondary, #d1d5db);
+}
+
+.devocionalTexto blockquote {
+  border-left: 3px solid var(--accent-gold, #c9a84c);
+  padding-left: 1.2rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-secondary, #d1d5db);
+}
+
+/* ── Passagem fixa no topo (sticky) ─────────────────────── */
+.stickyPassagem {
+  position: sticky;
+  top: 5.5rem;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1.2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.stickyBackBtn {
+  background: none;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 0.4rem;
+  color: var(--text-muted, #9ca3af);
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.stickyBackBtn:hover:not(:disabled) {
+  color: var(--accent-gold, #c9a84c);
+  border-color: var(--accent-gold, #c9a84c);
+}
+
+.stickyBackBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stickyPassagemRef {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-gold, #c9a84c);
+  white-space: nowrap;
+}
+
+.stickyPassagemTexto {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 0.85rem;
+  color: var(--text-muted, #9ca3af);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  font-style: italic;
+}
+
+/* ── Contador de palavras ───────────────────────────────── */
+.wordCount {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted, #9ca3af);
+  text-align: right;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Toast de cópia ─────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #22c55e;
+  color: #fff;
+  padding: 0.6rem 1.4rem;
+  border-radius: 2rem;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 9999;
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(1rem); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Histórico de sessão ────────────────────────────────── */
+.historicoSection {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color, #374151);
+}
+
+.historicoTitle {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-secondary, #d1d5db);
+  margin-bottom: 1rem;
+}
+
+.historicoItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color, #374151);
+  border-radius: 0.6rem;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.historicoItem:hover {
+  border-color: rgba(201, 168, 76, 0.3);
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.historicoRef {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-gold, #c9a84c);
+}
+
+.historicoInput {
+  font-size: 0.8rem;
+  color: var(--text-muted, #9ca3af);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.historicoDate {
+  font-size: 0.75rem;
+  color: var(--text-muted, #9ca3af);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .pageWrapper {
+    padding: 5rem 1rem 3rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .devocionalCard {
+    padding: 1.5rem 1rem;
+  }
+
+  .btnRow {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stepLine {
+    width: 2.5rem;
+  }
+}
