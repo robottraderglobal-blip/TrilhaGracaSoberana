@@ -4,10 +4,12 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { callLLM } from '../llm';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabase() {
+  return createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 const PROMPTS_DIR = join(process.cwd(), '..', 'ryle_pipeline', 'prompts');
 
