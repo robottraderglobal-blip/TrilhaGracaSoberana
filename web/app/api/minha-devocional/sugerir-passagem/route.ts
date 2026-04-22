@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
       modelo_llm: process.env.LLM_PROVIDER || 'openrouter',
     }));
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('usuario_passagens_sugeridas')
       .insert(inserts)
       .select('id, passagem_ref, passagem_texto');

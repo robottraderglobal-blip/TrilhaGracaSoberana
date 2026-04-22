@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     const palavras = contarPalavras(devocionalMarkdown);
 
     // Upsert (sobrescreve se já existir para esta passagem)
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('usuario_devocionais')
       .upsert(
         {

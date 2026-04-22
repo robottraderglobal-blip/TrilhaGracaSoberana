@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Buscar a passagem confirmada
-    const { data: passagem, error: errPassagem } = await supabase
+    const { data: passagem, error: errPassagem } = await getSupabase()
       .from('usuario_passagens_sugeridas')
       .select('*')
       .eq('id', passagemId)
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     const palavras = contarPalavras(analiseMarkdown);
 
     // Upsert (sobrescreve se já existir para esta passagem)
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('usuario_analises')
       .upsert(
         {

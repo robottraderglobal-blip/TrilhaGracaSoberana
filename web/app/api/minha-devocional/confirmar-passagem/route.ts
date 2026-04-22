@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('usuario_passagens_sugeridas')
       .update({ confirmada: true })
       .eq('id', passagemId);
