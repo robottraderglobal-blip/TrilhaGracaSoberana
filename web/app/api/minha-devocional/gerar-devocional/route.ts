@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const supabase = getSupabase();
     // Buscar passagem e análise
     const [{ data: passagem, error: errP }, { data: analise, error: errA }] =
       await Promise.all([
