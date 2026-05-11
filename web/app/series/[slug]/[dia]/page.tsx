@@ -1,16 +1,16 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import styles from '../cordeiro.module.css';
+import styles from '../../series.module.css';
 
 export const revalidate = 60;
 
-export default async function CordeiroDiaPage({
+export default async function SerieDiaPage({
   params,
 }: {
-  params: Promise<{ dia: string }>
+  params: Promise<{ slug: string; dia: string }>
 }) {
-  const { dia } = await params;
+  const { slug, dia } = await params;
   const diaNum = parseInt(dia, 10);
   
   if (isNaN(diaNum)) {
@@ -20,8 +20,9 @@ export default async function CordeiroDiaPage({
   const supabase = await createClient();
 
   const { data: devocional, error } = await supabase
-    .from('cordeiro_devocionais')
+    .from('series_devocionais')
     .select('*')
+    .eq('slug_serie', slug)
     .eq('dia', diaNum)
     .single();
 
@@ -29,17 +30,24 @@ export default async function CordeiroDiaPage({
     notFound();
   }
 
-  // Format content (assuming paragraphs are separated by \n\n)
+  // Buscar total de dias para esta série
+  const { count } = await supabase
+    .from('series_devocionais')
+    .select('id', { count: 'exact', head: true })
+    .eq('slug_serie', slug);
+
+  const maxDia = count || 21; // fallback para 21 caso a contagem falhe
+
   const paragraphs = devocional.conteudo.split('\n\n').filter((p: string) => p.trim() !== '');
 
   return (
     <div className={styles.container} style={{ maxWidth: '800px' }}>
-      <Link href="/cordeiro" className={styles.backLink}>
+      <Link href={`/series/${slug}`} className={styles.backLink}>
         &larr; Voltar para o Plano
       </Link>
 
       <div className={styles.detailHeader}>
-        <span className={styles.detailBadge}>Dia {devocional.dia} • {devocional.eixo}</span>
+        <span className={styles.detailBadge}>Dia {devocional.dia} • {devocional.semana}</span>
         <h1 className={styles.title}>{devocional.titulo}</h1>
       </div>
 
@@ -61,13 +69,13 @@ export default async function CordeiroDiaPage({
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem', borderTop: '1px solid var(--glass-border)', paddingTop: '2rem' }}>
         {diaNum > 1 ? (
-          <Link href={`/cordeiro/${diaNum - 1}`} className={styles.backLink} style={{ marginBottom: 0 }}>
+          <Link href={`/series/${slug}/${diaNum - 1}`} className={styles.backLink} style={{ marginBottom: 0 }}>
             &larr; Dia {diaNum - 1}
           </Link>
         ) : <div />}
         
-        {diaNum < 28 && (
-          <Link href={`/cordeiro/${diaNum + 1}`} className={styles.backLink} style={{ marginBottom: 0 }}>
+        {diaNum < maxDia && (
+          <Link href={`/series/${slug}/${diaNum + 1}`} className={styles.backLink} style={{ marginBottom: 0 }}>
             Dia {diaNum + 1} &rarr;
           </Link>
         )}
