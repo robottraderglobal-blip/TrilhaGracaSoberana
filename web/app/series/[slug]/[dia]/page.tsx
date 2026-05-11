@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import styles from '../../series.module.css';
 
 export const revalidate = 60;
@@ -38,7 +39,9 @@ export default async function SerieDiaPage({
 
   const maxDia = count || 21; // fallback para 21 caso a contagem falhe
 
-  const paragraphs = devocional.conteudo.split('\n\n').filter((p: string) => p.trim() !== '');
+  // Usamos uma função auxiliar para remover barras invertidas de escape do Mammoth (\)
+  // que podem poluir títulos curtos ou referências
+  const cleanEscapes = (text: string) => text.replace(/\\([.\-()])/g, '$1');
 
   return (
     <div className={styles.container} style={{ maxWidth: '800px' }}>
@@ -47,24 +50,28 @@ export default async function SerieDiaPage({
       </Link>
 
       <div className={styles.detailHeader}>
-        <span className={styles.detailBadge}>Dia {devocional.dia} • {devocional.semana}</span>
-        <h1 className={styles.title}>{devocional.titulo}</h1>
+        <span className={styles.detailBadge}>Dia {devocional.dia} • {cleanEscapes(devocional.semana)}</span>
+        <h1 className={styles.title}><ReactMarkdown components={{ p: ({node, ...props}) => <span {...props} /> }}>{cleanEscapes(devocional.titulo)}</ReactMarkdown></h1>
       </div>
 
       <div className={styles.versiculoBox}>
-        <div className={styles.versiculoText}>"{devocional.versiculo}"</div>
-        <div className={styles.versiculoRef}>— {devocional.referencia}</div>
+        <div className={styles.versiculoText}>
+          <ReactMarkdown components={{ p: ({node, ...props}) => <span {...props} /> }}>{`"${cleanEscapes(devocional.versiculo)}"`}</ReactMarkdown>
+        </div>
+        <div className={styles.versiculoRef}>
+          <ReactMarkdown components={{ p: ({node, ...props}) => <span {...props} /> }}>{`— ${cleanEscapes(devocional.referencia)}`}</ReactMarkdown>
+        </div>
       </div>
 
       <div className={styles.conteudo}>
-        {paragraphs.map((p: string, i: number) => (
-          <p key={i}>{p}</p>
-        ))}
+        <ReactMarkdown>{cleanEscapes(devocional.conteudo)}</ReactMarkdown>
       </div>
 
       <div className={styles.perguntaBox}>
         <div className={styles.perguntaTitle}>Para Refletir</div>
-        <div className={styles.perguntaText}>{devocional.pergunta}</div>
+        <div className={styles.perguntaText}>
+          <ReactMarkdown components={{ p: ({node, ...props}) => <span {...props} /> }}>{cleanEscapes(devocional.pergunta)}</ReactMarkdown>
+        </div>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem', borderTop: '1px solid var(--glass-border)', paddingTop: '2rem' }}>
