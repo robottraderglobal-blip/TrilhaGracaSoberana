@@ -1,9 +1,8 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { callLLM } from '../llm';
+import { PROMPTS } from '../prompts';
 
 function getSupabase() {
   return createClient(
@@ -12,10 +11,8 @@ function getSupabase() {
   );
 }
 
-const PROMPTS_DIR = join(process.cwd(), '..', 'ryle_pipeline', 'prompts');
-
 function loadPrompt(filename: string): string {
-  return readFileSync(join(PROMPTS_DIR, filename), 'utf-8');
+  return PROMPTS[filename] || '';
 }
 
 
@@ -66,7 +63,7 @@ export async function POST(req: NextRequest) {
     const systemPrompt = loadPrompt('escritor_system.md');
     const userMessage = `## Passagem Bíblica\n\n"${passagem.passagem_texto}"\n— ${passagem.passagem_ref} (ARA)\n\n## Análise Exegética\n\n${analise.conteudo_md}`;
 
-    const devocionalMarkdown = await callLLM(systemPrompt, userMessage, 'google/gemini-2.5-flash');
+    const devocionalMarkdown = await callLLM(systemPrompt, userMessage, 'google/gemini-flash-latest');
     const titulo = extrairTitulo(devocionalMarkdown);
     const palavras = contarPalavras(devocionalMarkdown);
 
