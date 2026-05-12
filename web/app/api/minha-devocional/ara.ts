@@ -4,8 +4,7 @@
  * Estrutura: Array<{ name: string; abbrev: string; chapters: string[][] }>
  */
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import bibleData from './ara_data.json';
 
 interface BibleBook {
   name: string;
@@ -17,9 +16,7 @@ let _bible: BibleBook[] | null = null;
 
 function getBible(): BibleBook[] {
   if (_bible) return _bible;
-  const path = join(process.cwd(), '..', 'ryle_pipeline', 'utils', 'ARA.json');
-  const raw = readFileSync(path, 'utf-8');
-  _bible = JSON.parse(raw) as BibleBook[];
+  _bible = bibleData as BibleBook[];
   return _bible;
 }
 
