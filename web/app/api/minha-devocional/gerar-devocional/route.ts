@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     const systemPrompt = loadPrompt('escritor_system.md');
     const userMessage = `## Passagem Bíblica\n\n"${passagem.passagem_texto}"\n— ${passagem.passagem_ref} (ARA)\n\n## Análise Exegética\n\n${analise.conteudo_md}`;
 
-    const devocionalMarkdown = await callLLM(systemPrompt, userMessage, 'google/gemini-flash-latest');
+    const devocionalMarkdown = await callLLM(systemPrompt, userMessage, '~google/gemini-flash-latest');
     const titulo = extrairTitulo(devocionalMarkdown);
     const palavras = contarPalavras(devocionalMarkdown);
 

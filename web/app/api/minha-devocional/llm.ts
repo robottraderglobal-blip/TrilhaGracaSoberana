@@ -14,7 +14,7 @@ export async function callLLM(
   /* ── OpenRouter (default — fetch nativo, sem SDK) ───────── */
   if (provider === 'openrouter') {
     const model =
-      modelOverride ?? process.env.OPENROUTER_MODEL ?? 'google/gemini-flash-latest';
+      modelOverride ?? process.env.OPENROUTER_MODEL ?? '~google/gemini-flash-latest';
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
