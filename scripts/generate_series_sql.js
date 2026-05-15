@@ -90,9 +90,17 @@ filesAll.forEach(filepath => {
         currentDay.versiculo = line.replace(/^\*"/, '').replace(/"\*$/, '').trim();
         state = 'REFERENCIA';
       } else if (filename === 'devocionais_cordeiro' && !line.startsWith('—') && line !== '') {
-         // Cordeiro versiculo
-         currentDay.versiculo = line.replace(/^"/, '').replace(/"$/, '').trim();
-         state = 'REFERENCIA';
+         // Cordeiro versiculo - check if ref is on same line (new format: "text" — Ref)
+         const dashIdx = line.indexOf('—');
+         if (dashIdx > 0 && line.startsWith('"')) {
+           // Combined format: "versiculo" — referencia
+           currentDay.versiculo = line.substring(0, dashIdx).replace(/^"/, '').replace(/"$/, '').replace(/"?\s*$/, '').trim();
+           currentDay.referencia = line.substring(dashIdx + 1).trim();
+           state = 'CONTEUDO';
+         } else {
+           currentDay.versiculo = line.replace(/^"/, '').replace(/"$/, '').trim();
+           state = 'REFERENCIA';
+         }
       }
       continue;
     }
