@@ -47,6 +47,9 @@ export default function RootLayout({
               <Link href="/semanas" className="navLink">
                 Devocionais
               </Link>
+              <Link href="/series" className="navLink">
+                Séries
+              </Link>
               <Link href="/culto-domestico" className="navLink">
                 Culto Doméstico
               </Link>

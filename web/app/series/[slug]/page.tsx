@@ -32,7 +32,8 @@ export default async function SeriePage({
     grouped[d.semana]!.push(d);
   });
 
-  const nomeSerie = devocionais[0]?.nome_serie;
+  const rawNome = devocionais[0]?.nome_serie || '';
+  const nomeSerie = rawNome.replace(/^série\s+\d+\s*[\u2014-]\s*/i, '').trim();
 
   return (
     <div className={styles.container}>

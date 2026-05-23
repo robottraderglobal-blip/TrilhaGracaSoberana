@@ -140,3 +140,51 @@ def get_verse_or_fallback(ref: str, fallback: str) -> str:
     """Busca versículo da ARA, retorna fallback se não encontrar."""
     verse = get_verse(ref)
     return verse if verse else fallback
+
+
+def get_hymn_for_day(dia: int) -> tuple[str, str]:
+    """
+    Retorna o hino e a letra para um dia específico (1-150).
+    Baseado no cifras_distribution_plan.md e novo_cantico_letras.json.
+    """
+    utils_dir = Path(__file__).parent
+    plan_path = utils_dir / "cifras_distribution_plan.md"
+    letras_path = utils_dir / "novo_cantico_letras.json"
+    
+    hymn_num = None
+    if plan_path.exists():
+        try:
+            content = plan_path.read_text(encoding="utf-8")
+            day_str = f"{dia:03d}"
+            # Match: | **day_str** | ... | **hymn_num - ...
+            pattern = rf"^\|\s*\*\*{day_str}\*\*\s*\|.*?\|\s*\*\*(\d+)\s*-"
+            for line in content.splitlines():
+                match = re.match(pattern, line.strip())
+                if match:
+                    hymn_num = match.group(1)
+                    break
+        except Exception:
+            pass
+            
+    if not hymn_num:
+        # Fallback determinístico
+        hymn_num = str(((dia - 1) % 399) + 1)
+        
+    hymn_title = f"Hino {hymn_num}"
+    hymn_lyrics = ""
+    if letras_path.exists():
+        try:
+            letras = json.loads(letras_path.read_text(encoding="utf-8"))
+            if str(hymn_num) in letras:
+                full_text = letras[str(hymn_num)]
+                lines = full_text.splitlines()
+                if lines:
+                    hymn_title = lines[0].strip()
+                    hymn_lyrics = "\n".join(lines[1:]).strip()
+                else:
+                    hymn_lyrics = full_text.strip()
+        except Exception:
+            pass
+            
+    return hymn_title, hymn_lyrics
+

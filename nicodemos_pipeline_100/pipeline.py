@@ -220,6 +220,9 @@ def executar(
     console.print("\n[bold cyan]💾 ETAPA 3: Salvando versão final[/bold cyan]")
     from .models.devocional import DevocionalFinal
 
+    # Garantir hino e letra 100% corretos programaticamente
+    trabalho.conteudo_md = _assegurar_hino_correto(trabalho.conteudo_md, plano["dia"])
+
     # Extrair pergunta de reflexão do texto e remover do markdown
     pergunta, conteudo_limpo = _extrair_pergunta_e_limpar_markdown(trabalho.conteudo_md)
 
@@ -270,6 +273,7 @@ def executar(
 @app.command()
 def executar_semana(
     semana: int = typer.Option(..., "--semana", "-s", help="Número da semana (1-15)"),
+    force: bool = typer.Option(False, "--force", "-f", help="Forçar reprocessamento de todos os dias da semana"),
 ):
     """🚀 Executar pipeline para todos os dias de uma semana."""
     from .db.client import get_plano_by_semana
@@ -282,7 +286,7 @@ def executar_semana(
 
     console.print(f"\n📅 Executando Semana {semana}: {len(dias)} dias\n")
 
-    SKIP_STATES = {"aprovado"}
+    SKIP_STATES = set() if force else {"aprovado"}
     STUCK_STATES = {"escrita_em_andamento", "escrita_concluida", "revisao_em_andamento"}
 
     logger = logging.getLogger("nicodemos_pipeline")
@@ -292,14 +296,14 @@ def executar_semana(
             console.print(f"   ⏭ Dia {dia_data['dia']} — já {dia_data['status']}")
             continue
 
-        if dia_data["status"] in STUCK_STATES:
-            console.print(f"   🔄 Dia {dia_data['dia']} — retomando de '{dia_data['status']}'")
+        if force or dia_data["status"] in STUCK_STATES:
+            console.print(f"   🔄 Dia {dia_data['dia']} — limpando dados anteriores e iniciando...")
             db.limpar_dados_dia(dia_data["id"])
             db.atualizar_status(dia_data["id"], "pending")
 
         console.rule(f"Dia {dia_data['dia']} — {dia_data['ref']}")
         try:
-            executar(dia=dia_data["dia"], force=False)
+            executar(dia=dia_data["dia"], force=force)
         except SystemExit:
             pass
         except Exception as e:
@@ -311,6 +315,7 @@ def executar_semana(
             except Exception:
                 pass
             continue
+
 
 
 @app.command()
@@ -354,6 +359,32 @@ def validar():
         console.print("[green]✅ Configuração válida![/green]\n")
     except ValueError as e:
         console.print(f"[red]❌ {e}[/red]\n")
+
+
+def _assegurar_hino_correto(conteudo_md: str, dia: int) -> str:
+    """Garante que a seção 7 da devocional contém as letras oficiais exatas e o hino correto."""
+    from .utils import get_hymn_for_day
+    from .agents.hymn_formatter import AgenteFormatadorHino
+    
+    hymn_title, hymn_lyrics = get_hymn_for_day(dia)
+    
+    # Formatar a letra do hino estruturada com estrofes e refrão
+    try:
+        formatador = AgenteFormatadorHino()
+        hymn_lyrics_formatted = formatador.formatar(hymn_title, hymn_lyrics)
+    except Exception:
+        hymn_lyrics_formatted = hymn_lyrics
+    
+    header_match = re.search(r'###\s*7\..*?Melodia no Lar[^\n]*\n', conteudo_md, re.IGNORECASE)
+    if header_match:
+        header = header_match.group(0)
+        index = header_match.start()
+        conteudo_antes = conteudo_md[:index]
+        section_7 = f"{header.strip()}\n\n[{hymn_title}]\n\n{hymn_lyrics_formatted}\n"
+        return conteudo_antes.strip() + "\n\n" + section_7
+    else:
+        section_7 = f"\n\n### 7. 🎵 Melodia no Lar (Letra Completa do Hino)\n\n[{hymn_title}]\n\n{hymn_lyrics_formatted}\n"
+        return conteudo_md.strip() + section_7
 
 
 def _extrair_pergunta_e_limpar_markdown(texto: str) -> tuple[str, str]:

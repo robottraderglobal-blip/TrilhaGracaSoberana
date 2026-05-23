@@ -22,7 +22,17 @@ class AgenteEscritor(BaseAgent):
         Returns:
             EscritorTrabalho com o rascunho da devocional
         """
-        user_msg = f"DIA: {plano['dia']}\nVERSÍCULO: {plano['ref']} — {plano['versiculo']}"
+        from ..utils import get_hymn_for_day
+        hymn_title, hymn_lyrics = get_hymn_for_day(plano["dia"])
+
+        user_msg = (
+            f"DIA: {plano['dia']}\n"
+            f"VERSÍCULO: {plano['ref']} — {plano['versiculo']}\n\n"
+            f"HINO OBRIGATÓRIO PARA MELODIA NO LAR:\n"
+            f"Use exatamente o título e a letra abaixo no final da devocional (seção 7):\n"
+            f"[{hymn_title}]\n"
+            f"{hymn_lyrics}"
+        )
 
         conteudo = self.call_llm(user_msg)
 
@@ -51,9 +61,16 @@ class AgenteEscritor(BaseAgent):
         Returns:
             Novo EscritorTrabalho com versão incrementada
         """
+        from ..utils import get_hymn_for_day
+        hymn_title, hymn_lyrics = get_hymn_for_day(plano["dia"])
+
         user_msg = (
             f"DIA: {plano['dia']}\n"
             f"VERSÍCULO: {plano['ref']} — {plano['versiculo']}\n\n"
+            f"HINO OBRIGATÓRIO PARA MELODIA NO LAR:\n"
+            f"Use exatamente o título e a letra abaixo no final da devocional (seção 7):\n"
+            f"[{hymn_title}]\n"
+            f"{hymn_lyrics}\n\n"
             f"## Rascunho Anterior (REPROVADO)\n"
             f"```\n{trabalho_anterior.conteudo_md}\n```\n\n"
             f"## Feedback do Revisor\n{feedback}\n\n"
@@ -74,3 +91,4 @@ class AgenteEscritor(BaseAgent):
         )
         novo.palavras = novo.contar_palavras()
         return novo
+

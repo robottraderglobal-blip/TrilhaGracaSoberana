@@ -34,8 +34,8 @@ LLM_MODELS = {
 # ── Pipeline Config (Nicodemos) ───────────────────────────
 MAX_CICLOS_REVISAO = int(os.getenv("NICO_MAX_CICLOS_REVISAO", "2"))
 SCORE_MINIMO_APROVACAO = float(os.getenv("NICO_SCORE_MINIMO", "80.0"))
-PALAVRAS_MIN = int(os.getenv("NICO_PALAVRAS_MIN", "700"))
-PALAVRAS_MAX = int(os.getenv("NICO_PALAVRAS_MAX", "1000"))
+PALAVRAS_MIN = int(os.getenv("NICO_PALAVRAS_MIN", "450"))
+PALAVRAS_MAX = int(os.getenv("NICO_PALAVRAS_MAX", "750"))
 
 # ── Paths ─────────────────────────────────────────────────
 PROMPTS_DIR = ROOT_DIR / "prompts"

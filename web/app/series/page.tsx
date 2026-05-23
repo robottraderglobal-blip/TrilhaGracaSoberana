@@ -18,7 +18,9 @@ export default async function SeriesPage() {
   const uniqueSeries: Record<string, string> = {};
   if (series) {
     series.forEach(s => {
-      uniqueSeries[s.slug_serie] = s.nome_serie;
+      // Remove prefix "Série X —" or "Série X -"
+      const cleanedName = s.nome_serie.replace(/^série\s+\d+\s*[\u2014-]\s*/i, '').trim();
+      uniqueSeries[s.slug_serie] = cleanedName;
     });
   }
 
