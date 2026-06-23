@@ -1,0 +1,39 @@
+name: devotional-enrichment-squad
+version: 1.0.0
+description: Squad for devotional enrichment management
+author: miqueiasa1
+license: MIT
+slashPrefix: devotional-enrichment
+aiox:
+  minVersion: 2.1.0
+  type: squad
+components:
+  tasks:
+    - research-theology.md
+    - write-devotional.md
+    - validate-depth.md
+  agents:
+    - exegete-researcher.md
+    - ryle-writer.md
+    - theological-qa.md
+  workflows: []
+  checklists: []
+  templates: []
+  tools: []
+  scripts: []
+config:
+  extends: extend
+  coding-standards: config/coding-standards.md
+  tech-stack: config/tech-stack.md
+  source-tree: config/source-tree.md
+dependencies:
+  node: []
+  python: []
+  squads: []
+tags:
+  - custom
+blueprint:
+  source:
+    - c:\Users\ryzen\Downloads\Antigravity\TrilhaGracaSoberana\novos\serie3-aconselhamento-biblico-21-devocionais.md
+  created_at: "2026-06-23T01:26:12.503Z"
+  confidence: 0.92

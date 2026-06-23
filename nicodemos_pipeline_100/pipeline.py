@@ -220,7 +220,8 @@ def executar(
     console.print("\n[bold cyan]💾 ETAPA 3: Salvando versão final[/bold cyan]")
     from .models.devocional import DevocionalFinal
 
-    # Garantir hino e letra 100% corretos programaticamente
+    # Garantir cabeçalhos limpos (sem emojis/parênteses) e hino correto
+    trabalho.conteudo_md = _limpar_cabecalhos(trabalho.conteudo_md)
     trabalho.conteudo_md = _assegurar_hino_correto(trabalho.conteudo_md, plano["dia"])
 
     # Extrair pergunta de reflexão do texto e remover do markdown
@@ -361,29 +362,110 @@ def validar():
         console.print(f"[red]❌ {e}[/red]\n")
 
 
+def _limpar_cabecalhos(conteudo_md: str) -> str:
+    """Remove emojis e textos entre parênteses dos cabeçalhos de seção."""
+    # Remove emojis comuns dos cabeçalhos ### N.
+    conteudo_md = re.sub(
+        r'(###\s*\d+\.)\s*[\U0001F300-\U0001F9FF\u2600-\u26FF\u2700-\u27BF\U0001FA00-\U0001FA6F\U0001FA70-\U0001FAFF]+\s*',
+        r'\1 ',
+        conteudo_md,
+    )
+    # Remove textos entre parênteses nos cabeçalhos (ex: "(Breve Explicação)")
+    conteudo_md = re.sub(
+        r'(###\s*\d+\.\s*[^(\n]+?)\s*\([^)]*\)\s*$',
+        r'\1',
+        conteudo_md,
+        flags=re.MULTILINE,
+    )
+    return conteudo_md
+
+
 def _assegurar_hino_correto(conteudo_md: str, dia: int) -> str:
-    """Garante que a seção 7 da devocional contém as letras oficiais exatas e o hino correto."""
-    from .utils import get_hymn_for_day
-    from .agents.hymn_formatter import AgenteFormatadorHino
+    """Garante que a seção 7 da devocional contém as letras oficiais exatas e o hino correto.
     
-    hymn_title, hymn_lyrics = get_hymn_for_day(dia)
+    Lê a ordem de hinos do hinos_usuario.json e busca a letra e formatação
+    de forma estruturada a partir das letras do hinário Novo Cântico.
+    """
+    import json
+    from pathlib import Path
     
-    # Formatar a letra do hino estruturada com estrofes e refrão
-    try:
-        formatador = AgenteFormatadorHino()
-        hymn_lyrics_formatted = formatador.formatar(hymn_title, hymn_lyrics)
-    except Exception:
-        hymn_lyrics_formatted = hymn_lyrics
+    # 1. Carregar hinos do usuário
+    utils_dir = Path(__file__).parent / "utils"
+    hinos_path = utils_dir / "hinos_usuario.json"
+    letras_path = utils_dir / "novo_cantico_letras.json"
+    formatted_path = utils_dir / "novo_cantico_formatado.json"
     
+    hymn_key = str(dia)
+    if hinos_path.exists():
+        try:
+            with open(hinos_path, "r", encoding="utf-8") as f:
+                hinos = json.load(f)
+                if dia <= len(hinos):
+                    hymn_key = hinos[dia - 1]
+        except Exception:
+            pass
+            
+    # 2. Obter letra e título do hino
+    letra_crua = ""
+    hymn_title = f"Hino {hymn_key}"
+    
+    if letras_path.exists():
+        try:
+            with open(letras_path, "r", encoding="utf-8") as f:
+                letras_data = json.load(f)
+                
+            if hymn_key == "110-a" and "110" in letras_data:
+                partes = letras_data["110"].split("110-A")
+                letra_crua = partes[1].strip()
+                hymn_title = "110-A - Crer e observar"
+            elif hymn_key == "110" and "110" in letras_data:
+                partes = letras_data["110"].split("110-A")
+                letra_crua = partes[0].replace("110 - A vida com Jesus", "").strip()
+                hymn_title = "110 - A vida com Jesus"
+            elif hymn_key in letras_data:
+                raw_text = letras_data[hymn_key]
+                linhas = raw_text.splitlines()
+                hymn_title = linhas[0].strip()
+                letra_crua = "\n".join(linhas[1:]).strip()
+        except Exception:
+            pass
+            
+    # 3. Obter a versão formatada
+    lyrics_formatted = ""
+    hymn_title_display = hymn_title
+    
+    # Tentar pegar pré-formatado
+    simplified_key = hymn_key.replace("-", "")
+    if formatted_path.exists():
+        try:
+            with open(formatted_path, "r", encoding="utf-8") as f:
+                formatted_data = json.load(f)
+            if simplified_key in formatted_data:
+                lyrics_formatted = formatted_data[simplified_key]["formatado"]
+                hymn_title_display = formatted_data[simplified_key]["titulo"]
+        except Exception:
+            pass
+            
+    # Se não estiver no pré-formatado, chamar o AgenteFormatadorHino
+    if not lyrics_formatted and letra_crua:
+        try:
+            from .agents.hymn_formatter import AgenteFormatadorHino
+            formatter = AgenteFormatadorHino()
+            lyrics_formatted = formatter.formatar(hymn_title, letra_crua)
+        except Exception:
+            lyrics_formatted = letra_crua
+            
+    if not lyrics_formatted:
+        lyrics_formatted = letra_crua
+        
     header_match = re.search(r'###\s*7\..*?Melodia no Lar[^\n]*\n', conteudo_md, re.IGNORECASE)
     if header_match:
-        header = header_match.group(0)
         index = header_match.start()
         conteudo_antes = conteudo_md[:index]
-        section_7 = f"{header.strip()}\n\n[{hymn_title}]\n\n{hymn_lyrics_formatted}\n"
+        section_7 = f"### 7. Melodia no Lar\n\n[{hymn_title_display}]\n\n{lyrics_formatted}\n"
         return conteudo_antes.strip() + "\n\n" + section_7
     else:
-        section_7 = f"\n\n### 7. 🎵 Melodia no Lar (Letra Completa do Hino)\n\n[{hymn_title}]\n\n{hymn_lyrics_formatted}\n"
+        section_7 = f"\n\n### 7. Melodia no Lar\n\n[{hymn_title_display}]\n\n{lyrics_formatted}\n"
         return conteudo_md.strip() + section_7
 
 

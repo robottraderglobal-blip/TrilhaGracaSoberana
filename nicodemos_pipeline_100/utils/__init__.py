@@ -188,3 +188,52 @@ def get_hymn_for_day(dia: int) -> tuple[str, str]:
             
     return hymn_title, hymn_lyrics
 
+
+def get_hymn_formatted_for_day(dia: int) -> tuple[str, str]:
+    """
+    Retorna o hino pré-formatado (com estrofes e refrão corretos)
+    para um dia específico (1-150).
+
+    Usa o banco novo_cantico_formatado.json scraped do site oficial
+    novocantico.com.br, que contém a estrutura XML com tags
+    <estrofe>, <verso> e <coro>.
+
+    Returns:
+        (titulo, letra_formatada) — ex: ("151 - O Bom Pastor", "**Estrofe 1**\n...")
+    """
+    utils_dir = Path(__file__).parent
+    plan_path = utils_dir / "cifras_distribution_plan.md"
+    formatted_path = utils_dir / "novo_cantico_formatado.json"
+
+    # 1. Descobrir qual hino corresponde ao dia
+    hymn_num = None
+    if plan_path.exists():
+        try:
+            content = plan_path.read_text(encoding="utf-8")
+            day_str = f"{dia:03d}"
+            pattern = rf"^\|\s*\*\*{day_str}\*\*\s*\|.*?\|\s*\*\*(\d+)\s*-"
+            for line in content.splitlines():
+                match = re.match(pattern, line.strip())
+                if match:
+                    hymn_num = match.group(1)
+                    break
+        except Exception:
+            pass
+
+    if not hymn_num:
+        hymn_num = str(((dia - 1) % 399) + 1)
+
+    # 2. Buscar no banco pré-formatado
+    if formatted_path.exists():
+        try:
+            banco = json.loads(formatted_path.read_text(encoding="utf-8"))
+            if str(hymn_num) in banco:
+                entry = banco[str(hymn_num)]
+                return entry["titulo"], entry["formatado"]
+        except Exception:
+            pass
+
+    # 3. Fallback: retornar a versão não-formatada
+    return get_hymn_for_day(dia)
+
+

@@ -55,17 +55,27 @@ def obter_texto_biblico(referencia: str) -> str:
     padrao = re.compile(r'^(.+?)\s+(\d+)\.(\d+)(?:-(\d+))?$')
     match = padrao.match(referencia.strip())
     
-    if not match:
-        return f"({referencia})"
-
-    livro_nome = match.group(1)
-    capitulo_str = match.group(2)
-    v_inicio_str = match.group(3)
-    v_fim_str = match.group(4)
-    
-    capitulo = int(capitulo_str)
-    v_inicio = int(v_inicio_str)
-    v_fim = int(v_fim_str) if v_fim_str else v_inicio
+    if match:
+        livro_nome = match.group(1)
+        capitulo = int(match.group(2))
+        v_inicio = int(match.group(3))
+        v_fim = int(match.group(4)) if match.group(4) else v_inicio
+    else:
+        # Tenta suporte para livros de capítulo único (ex: Judas 24-25)
+        padrao_uni = re.compile(r'^(.+?)\s+(\d+)(?:-(\d+))?$')
+        match_uni = padrao_uni.match(referencia.strip())
+        if match_uni:
+            livro_nome = match_uni.group(1)
+            livro_norm = normalizar_livro(livro_nome)
+            LIVROS_UNICAPITULO = {"judas", "filemon", "obadias", "2 joão", "3 joão", "ii joão", "iii joão"}
+            if livro_norm in LIVROS_UNICAPITULO:
+                capitulo = 1
+                v_inicio = int(match_uni.group(2))
+                v_fim = int(match_uni.group(3)) if match_uni.group(3) else v_inicio
+            else:
+                return f"({referencia})"
+        else:
+            return f"({referencia})"
 
     livro_norm = normalizar_livro(livro_nome)
     
@@ -98,3 +108,4 @@ if __name__ == "__main__":
     print(obter_texto_biblico("Provérbios 23.4-5"))
     print(obter_texto_biblico("Salmo 131.1-3"))
     print(obter_texto_biblico("1 Timóteo 6.13-16"))
+    print(obter_texto_biblico("Judas 24-25"))

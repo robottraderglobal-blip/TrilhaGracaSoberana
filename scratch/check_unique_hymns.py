@@ -1,0 +1,51 @@
+import sys
+import io
+import re
+import json
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+raw_input = """
+2,3,4,6,9,10,11,13,14,1617 18 19 21 22 25 26 27 28 32 33  37  39 40  42 43 47 49 51 52 54 57 61 62 63 64 67 68 71 74 78 86 88 89 92 93 94  97 99 102 104 105 106 107 108  109 110 110-a 111 112 113 114 115 116 117 120 121 127 128 129 130 131 132 134 135 136 137 138 144 145 146 147 148 150 151 153 155 156 157 159 161 162 163 164 165  169   172 176 178 179 180 183 184 185 186 187 191 192 193 194 198 199 201 202 205 209 210 211 213 218 221 222 225 226 227 230 231 232 237 239 240 241 243 245 249 250 251 253 254 260 266 267 268 269 270 272 274 282 283 274 285 286 287 288 289 292 296 297 298 299 300 303 304 306 307 308 311 312 313 315 316 318 319 320 321 334 335 336 339 340 341 350 351 352 354 359 362 367 368 373 374 379 382 392 395 396 397
+"""
+
+def parse_hymns(text):
+    text = text.replace("1617", "16, 17")
+    tokens = re.split(r'[\s,]+', text.strip())
+    hymns = []
+    for token in tokens:
+        if not token:
+            continue
+        if re.match(r'^\d+$', token) or re.match(r'^\d+-[a-zA-Z]$', token):
+            hymns.append(token.lower())
+    return hymns
+
+hymns_list = parse_hymns(raw_input)
+
+# Remover duplicados mantendo a ordem
+unique_hymns = []
+seen = set()
+for h in hymns_list:
+    if h not in seen:
+        seen.add(h)
+        unique_hymns.append(h)
+
+# Abrir letras cruas
+letras_path = r"C:\Users\ryzen\.gemini\antigravity-ide\brain\cccf21cc-73ee-4685-9069-b6d3fb2d31a2\scratch\novo_cantico_letras.json"
+try:
+    with open(letras_path, "r", encoding="utf-8") as f:
+        letras_data = json.load(f)
+except Exception as e:
+    print(f"Erro ao abrir letras: {e}")
+    letras_data = {}
+
+missing = []
+for h in unique_hymns:
+    # Tratar '110-a' -> '110-a' no letras
+    if h not in letras_data:
+        missing.append(h)
+
+print(f"Hinos ausentes em novo_cantico_letras.json: {len(missing)}")
+if missing:
+    print(" -> " + ", ".join(missing))
+else:
+    print(" -> Todos os 196 hinos únicos do usuário existem em novo_cantico_letras.json!")

@@ -18,42 +18,44 @@ Versão bíblica obrigatória: **ARA (Almeida Revista e Atualizada)**.
 
 ## Estrutura Obrigatória da Devocional
 
-A devocional deve seguir exatamente a estrutura abaixo, separada por cabeçalhos claros (`###` ou `####`):
+A devocional deve seguir exatamente a estrutura abaixo, separada por cabeçalhos claros (`###` ou `####`).
 
-### 1. 📖 O Versículo do Dia
+**REGRA ABSOLUTA DE FORMATAÇÃO:** Os cabeçalhos devem ser limpos, sem emojis e sem textos entre parênteses. Siga exatamente os títulos abaixo.
+
+### 1. O Versículo do Dia
 - Cite o versículo **completo** em itálico com referência (ARA).
-- Adicione uma instrução para os pais: *(Peça para um dos filhos ou membros da família ler em voz alta diretamente na Bíblia)*.
+- Adicione uma instrução para os pais: *Peça para um dos filhos ou membros da família ler em voz alta diretamente na Bíblia.*
 
-### 2. 🔍 Entendendo o Texto (Breve Explicação)
+### 2. Entendendo o Texto
 - Forneça exatamente **3 bullet points rápidos** e muito simples explicando:
   - *O contexto histórico/bíblico* (de onde vem o versículo e quem falou).
   - *O núcleo teológico* (o que o versículo ensina sobre Deus ou o homem).
   - *A conexão com Jesus* (como essa verdade se cumpre em Cristo).
 
-### 3. ☕ Palavra ao Coração
+### 3. Palavra ao Coração
 - O corpo da devocional deve ter de **3 a 4 parágrafos curtos** (entre **250 e 350 palavras** no total).
 - Deve ser uma leitura fluida, dinâmica e afetiva (tempo estimado de leitura falada: menos de 2 minutos).
 - Cada parágrafo deve ter de 4 a 6 linhas.
 - Foque na aplicação prática e relacional dentro do lar.
 
-### 4. 💬 Momento da Conversa
+### 4. Momento da Conversa
 - Inclua exatamente **2 perguntas interativas** para abrir a roda de conversa familiar:
-  - **Para os menores (Crianças):** Uma pergunta muito concreta e simples baseada no dia a dia da criança (ex: *"Quando você sente medo no escuro..."* ou *"Como você pode ajudar seu irmão hoje..."*).
-  - **Para os maiores (Adolescentes e Adultos):** Uma pergunta de autoexame reflexivo e profundo (ex: *"Em qual área você tem mais dificuldade de silenciar o orgulho..."*).
+  - **Para os menores:** Uma pergunta muito concreta e simples baseada no dia a dia da criança (ex: *"Quando você sente medo no escuro..."* ou *"Como você pode ajudar seu irmão hoje..."*).
+  - **Para os maiores:** Uma pergunta de autoexame reflexivo e profundo (ex: *"Em qual área você tem mais dificuldade de silenciar o orgulho..."*).
 
-### 5. 🎯 Desafio Prático do Dia
+### 5. Desafio Prático do Dia
 - Forneça **1 ação concreta, simples e mensurável** para a família praticar nas próximas 24 horas.
 
-### 6. 🙏 Clamor do Lar (Motivos de Oração)
+### 6. Clamor do Lar
 - Forneça exatamente **3 tópicos de oração em tópicos**, curtos e focados na aplicação do texto na dinâmica da casa.
 
-### 7. 🎵 Melodia no Lar (Letra Completa do Hino)
+### 7. Melodia no Lar
 - Forneça o hino correspondente ao dia conforme o **Plano de Distribuição do Hinário Novo Cântico**.
 - Você deve extrair e trazer a **letra completa do hino em texto** estruturada de forma organizada, permitindo que a família cante diretamente no documento sem abrir links externos. A fonte de dados oficial é o arquivo JSON local `novo_cantico_letras.json` que contém todos os 399 hinos oficiais da IPB.
 - Exemplo:
   ```text
   [Hino XX — Nome do Hino]
-  (Estrofes e coro completos do hino)
+  (Estrofes e refrão completos do hino)
   ```
 
 ---
